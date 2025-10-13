@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego Dados</title>
+</head>
+<body>
+    <h2>¡Tira el Dado!</h2>
+    
+    <p>Dinero acumulado: <span id="dinero">10</span></p>
+    
+    <p>Dado: <img id="dado" src="" alt="Dado" width="50" height="50"></p>
+    
+    <p>Apostar: <input type="number" id="apuesta" value="1" min="1"></p>
+    
+    <button onclick="jugar()">Sacaré un número mayor</button>
+    
+    <p id="mensaje"></p>
+    
+    <script>
+        let dinero = 10;
+        let dadoAnterior = null;
+        let dadoActual = null;
+
+        function lanzarDado(){
+            return Math.floor(Math.random() * 6) + 1;
+        }
+        
+        function actualizarImagenDado(valor) {
+            document.getElementById('dado').src = 'dice' + valor + '.gif';
+        }
+
+        function jugar(){
+            const apuesta = parseInt(document.getElementById('apuesta').value);
+            
+            if(apuesta > dinero){
+                document.getElementById('mensaje').textContent = "No puedes apostar más de lo que tienes";
+                return;
+            }
+
+            dadoAnterior = dadoActual;
+            dadoActual = lanzarDado();
+            actualizarImagenDado(dadoActual);
+
+            if(dadoAnterior === null){
+                document.getElementById('mensaje').textContent = "Juego Iniciado";
+                return;
+            }
+            
+            if(dadoActual > dadoAnterior){
+                dinero += apuesta;
+                document.getElementById('mensaje').textContent = "¡Has ganado!";
+            } else {
+                dinero -= apuesta;
+                document.getElementById('mensaje').textContent = "Has perdido";
+            }
+            
+            document.getElementById('dinero').textContent = dinero;
+
+            if(dinero <= 0){
+                document.getElementById('mensaje').textContent = "Has perdido, pulsa F5 para volver a jugar";
+            }
+        }
+
+        // Inicializar el juego
+        dadoActual = lanzarDado();
+        actualizarImagenDado(dadoActual);
+    </script>
+</body>
+</html>
